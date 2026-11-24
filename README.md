@@ -98,42 +98,52 @@ flowchart TD
 | Vercel Blob | Cloud image storage |
 | Sharp | Image optimization |
 
+
 ## 📸 Screenshots
 
 <details>
-<summary>Homepage</summary>
+<summary>🏠 Homepage</summary>
 
-![Homepage](docs/screenshots/homepage.png)
-
-</details>
-
-<details>
-<summary>Vehicle Catalog</summary>
-
-![Catalog](docs/screenshots/catalog.png)
+![Homepage 1](docs/screenshots/Homepage-1.png)
+![Homepage 2](docs/screenshots/Homepage-2.png)
 
 </details>
 
 <details>
-<summary>Vehicle Details</summary>
+<summary>🚗 Vehicle Catalog</summary>
 
-![Vehicle Details](docs/screenshots/car-details.png)
-
-</details>
-
-<details>
-<summary>User Account</summary>
-
-![User Account](docs/screenshots/account.png)
+![Vehicle Catalog](docs/screenshots/Cars.png)
 
 </details>
 
 <details>
-<summary>Admin Dashboard</summary>
+<summary>📝 Sell Your Car — Listing Wizard</summary>
 
-![Admin Dashboard](docs/screenshots/admin.png)
+![Step 1](docs/screenshots/Sell-1.png)
+![Step 2](docs/screenshots/Sell-2.png)
+![Step 3](docs/screenshots/Sell-3.png)
+![Step 4](docs/screenshots/Sell-4.png)
+![Step 5](docs/screenshots/Sell-5.png)
 
 </details>
+
+<details>
+<summary>👤 My Listings</summary>
+
+![My Listings](docs/screenshots/My-Listing.png)
+
+</details>
+
+<details>
+<summary>🛡️ Admin Dashboard</summary>
+
+![Admin Dashboard 1](docs/screenshots/Admin-1.png)
+![Admin Dashboard 2](docs/screenshots/Admin-2.png)
+![Admin Dashboard 3](docs/screenshots/Admin-3.png)
+![Admin Dashboard 4](docs/screenshots/Admin-4.png)
+
+</details>
+
 
 ## 🚀 Getting Started
 
