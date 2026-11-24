@@ -10,7 +10,7 @@
       <div class="relative mx-auto -mt-7 max-w-[1440px] px-4 pb-12 sm:px-6 lg:px-8">
         <div class="flex min-w-0 flex-col gap-6 md:flex-row lg:gap-8">
           <AccountSidebar />
-          <div class="min-w-0 flex-1 bg-brand-background">
+          <div class="min-w-0 flex-1 bg-brand-background md:rounded-t-2xl md:px-5 md:pt-5 lg:px-6 lg:pt-6">
             <slot />
           </div>
         </div>

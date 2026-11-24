@@ -24,3 +24,7 @@ logs
 .env
 .env.*
 !.env.example
+
+# Local demo photo sources
+seed-images/*
+!seed-images/.gitkeep

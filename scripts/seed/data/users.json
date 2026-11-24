@@ -1,0 +1,12 @@
+[
+  { "key": "de-munich", "firstName": "Lena", "lastName": "Weber", "country": "DE", "city": "Munich", "email": "eurocars-demo-lena-weber@example.com" },
+  { "key": "de-berlin", "firstName": "Felix", "lastName": "Keller", "country": "DE", "city": "Berlin", "email": "eurocars-demo-felix-keller@example.com" },
+  { "key": "nl-amsterdam", "firstName": "Emma", "lastName": "Bakker", "country": "NL", "city": "Amsterdam", "email": "eurocars-demo-emma-bakker@example.com" },
+  { "key": "it-milan", "firstName": "Marco", "lastName": "Ricci", "country": "IT", "city": "Milan", "email": "eurocars-demo-marco-ricci@example.com" },
+  { "key": "pl-warsaw", "firstName": "Anna", "lastName": "Nowak", "country": "PL", "city": "Warsaw", "email": "eurocars-demo-anna-nowak@example.com" },
+  { "key": "fr-paris", "firstName": "Camille", "lastName": "Moreau", "country": "FR", "city": "Paris", "email": "eurocars-demo-camille-moreau@example.com" },
+  { "key": "fr-lyon", "firstName": "Hugo", "lastName": "Laurent", "country": "FR", "city": "Lyon", "email": "eurocars-demo-hugo-laurent@example.com" },
+  { "key": "be-brussels", "firstName": "Sophie", "lastName": "Peeters", "country": "BE", "city": "Brussels", "email": "eurocars-demo-sophie-peeters@example.com" },
+  { "key": "at-vienna", "firstName": "Johanna", "lastName": "Berger", "country": "AT", "city": "Vienna", "email": "eurocars-demo-johanna-berger@example.com" },
+  { "key": "pl-krakow", "firstName": "Marek", "lastName": "Kowalski", "country": "PL", "city": "Krakow", "email": "eurocars-demo-marek-kowalski@example.com" }
+]

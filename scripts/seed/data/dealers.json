@@ -1,0 +1,7 @@
+[
+  { "key": "munich-performance", "owner": "de-munich", "name": "Munich Performance Motors", "country": "DE", "city": "Munich", "description": "Demo dealership. A fictional Munich showroom focused on performance cars." },
+  { "key": "berlin-gallery", "owner": "de-berlin", "name": "Berlin Auto Gallery", "country": "DE", "city": "Berlin", "description": "Demo dealership. A fictional Berlin showroom for contemporary cars." },
+  { "key": "amsterdam-premium", "owner": "nl-amsterdam", "name": "Amsterdam Premium Cars", "country": "NL", "city": "Amsterdam", "description": "Demo dealership. A fictional Amsterdam showroom for premium cars." },
+  { "key": "milano-luxury", "owner": "it-milan", "name": "Milano Luxury Automotive", "country": "IT", "city": "Milan", "description": "Demo dealership. A fictional Milan showroom for luxury cars." },
+  { "key": "warsaw-select", "owner": "pl-warsaw", "name": "Warsaw Auto Select", "country": "PL", "city": "Warsaw", "description": "Demo dealership. A fictional Warsaw showroom for selected vehicles." }
+]
