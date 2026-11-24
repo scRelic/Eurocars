@@ -1,0 +1,37 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter";
+
+@theme {
+  --font-sans: "Inter Variable", Inter, ui-sans-serif, system-ui, sans-serif;
+  --color-brand-navy: #0b1220;
+  --color-brand-blue: #2563eb;
+  --color-brand-blue-hover: #1d4ed8;
+  --color-brand-background: #f3f6fa;
+  --color-brand-surface: #ffffff;
+  --color-brand-text: #111827;
+  --color-brand-muted: #64748b;
+  --color-brand-border: #e2e8f0;
+  --color-brand-success: #16a34a;
+  --color-brand-warning: #f59e0b;
+  --color-brand-danger: #dc2626;
+}
+
+@layer base {
+  body {
+    @apply bg-brand-background font-sans text-brand-text antialiased;
+  }
+}
+
+@layer components {
+  .search-input {
+    @apply min-h-12 w-full rounded-xl border border-brand-border bg-brand-surface px-3.5 text-sm text-brand-text outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-brand-blue focus:ring-4 focus:ring-blue-100;
+  }
+
+  .auth-input {
+    @apply min-h-12 w-full rounded-xl border border-brand-border bg-brand-surface px-4 text-sm text-brand-text outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-brand-blue focus:ring-4 focus:ring-blue-100;
+  }
+
+  .auth-submit {
+    @apply flex min-h-12 w-full cursor-pointer items-center justify-center rounded-xl bg-brand-blue px-5 py-3 font-semibold text-white shadow-sm transition hover:bg-brand-blue-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue disabled:cursor-not-allowed disabled:opacity-60;
+  }
+}

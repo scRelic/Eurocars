@@ -1,0 +1,45 @@
+{
+  "name": "frontend",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "test": "npm run test:unit && npm run test:integration",
+    "test:unit": "node --test tests/auth.test.mjs tests/image-processing.test.mjs tests/blob-storage.test.mjs",
+    "test:coverage": "node --test --experimental-test-coverage tests/auth.test.mjs",
+    "test:integration": "python tests/listings.integration.py",
+    "test:e2e": "playwright test tests/e2e --browser all",
+    "lint": "eslint .",
+    "typecheck": "nuxt typecheck",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "^5.3.0",
+    "@lucide/vue": "^1.77.0",
+    "@vercel/blob": "^2.9.0",
+    "argon2": "^0.45.2",
+    "chart.js": "^4.4.0",
+    "nuxt": "^4.6.4",
+    "pg": "^8.23.1",
+    "sharp": "^0.35.5",
+    "vue": "^3.5.45",
+    "vue-chartjs": "^5.3.2",
+    "vue-router": "^5.4.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@nuxt/eslint": "^1.17.0",
+    "@playwright/test": "^1.65.1",
+    "@tailwindcss/vite": "^4.3.5",
+    "@types/pg": "^8.23.1",
+    "eslint": "^10.15.0",
+    "lighthouse": "^13.6.0",
+    "tailwindcss": "^4.3.5",
+    "typescript": "^6.0.3",
+    "vue-tsc": "^3.3.14"
+  }
+}
