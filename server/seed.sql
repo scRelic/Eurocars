@@ -1,8 +1,13 @@
+<<<<<<< HEAD
 -- Optional demo data for a fresh database created with db.sql.
+=======
+-- Optional, manually applied demo data for a database created with db.sql.
+>>>>>>> master
 -- Demo accounts cannot sign in; the listings are fictional and have no photos.
 
 BEGIN;
 
+<<<<<<< HEAD
 LOCK TABLE countries, users, car_brands, car_models, cars, car_features IN SHARE ROW EXCLUSIVE MODE;
 
 DO $$
@@ -13,6 +18,10 @@ BEGIN
         RAISE EXCEPTION 'Demo seed requires empty countries, users, car_brands, car_models, cars and car_features tables.';
     END IF;
 END $$;
+=======
+LOCK TABLE countries, users, car_brands, car_models, cars, car_features, car_feature_links
+    IN SHARE ROW EXCLUSIVE MODE;
+>>>>>>> master
 
 INSERT INTO countries (code, name, currency) VALUES
     ('AT', 'Austria', 'EUR'), ('BE', 'Belgium', 'EUR'), ('BG', 'Bulgaria', 'BGN'),
@@ -25,9 +34,18 @@ INSERT INTO countries (code, name, currency) VALUES
     ('LV', 'Latvia', 'EUR'), ('MT', 'Malta', 'EUR'), ('NL', 'Netherlands', 'EUR'),
     ('NO', 'Norway', 'NOK'), ('PL', 'Poland', 'PLN'), ('PT', 'Portugal', 'EUR'),
     ('RO', 'Romania', 'RON'), ('SE', 'Sweden', 'SEK'), ('SI', 'Slovenia', 'EUR'),
+<<<<<<< HEAD
     ('SK', 'Slovakia', 'EUR'), ('UA', 'Ukraine', 'UAH');
 
 INSERT INTO car_brands (name, slug) VALUES
+=======
+    ('SK', 'Slovakia', 'EUR'), ('UA', 'Ukraine', 'UAH')
+ON CONFLICT (code) DO NOTHING;
+
+CREATE TEMP TABLE eurocars_demo_brands (name TEXT NOT NULL, slug TEXT NOT NULL) ON COMMIT DROP;
+
+INSERT INTO eurocars_demo_brands (name, slug) VALUES
+>>>>>>> master
     ('Audi', 'audi'), ('BMW', 'bmw'), ('Ford', 'ford'), ('Honda', 'honda'),
     ('Hyundai', 'hyundai'), ('Kia', 'kia'), ('Land Rover', 'land-rover'),
     ('Mazda', 'mazda'), ('Mercedes-Benz', 'mercedes-benz'), ('Nissan', 'nissan'),
@@ -35,9 +53,36 @@ INSERT INTO car_brands (name, slug) VALUES
     ('Skoda', 'skoda'), ('Tesla', 'tesla'), ('Toyota', 'toyota'),
     ('Volkswagen', 'volkswagen'), ('Volvo', 'volvo');
 
+<<<<<<< HEAD
 INSERT INTO car_models (brand_id, name, slug)
 SELECT b.id, m.name, m.slug
 FROM (VALUES
+=======
+INSERT INTO car_brands (name, slug)
+SELECT name, slug FROM eurocars_demo_brands
+ON CONFLICT DO NOTHING;
+
+DO $$
+BEGIN
+    IF EXISTS (
+        SELECT 1 FROM eurocars_demo_brands d
+        JOIN car_brands b ON b.slug = d.slug
+        WHERE b.name <> d.name
+    ) THEN
+        RAISE EXCEPTION 'Demo seed: a brand slug belongs to a different brand. Resolve the conflict before retrying.';
+    END IF;
+    IF EXISTS (
+        SELECT 1 FROM eurocars_demo_brands d
+        WHERE NOT EXISTS (SELECT 1 FROM car_brands b WHERE b.name = d.name)
+    ) THEN
+        RAISE EXCEPTION 'Demo seed: a required brand could not be resolved.';
+    END IF;
+END $$;
+
+CREATE TEMP TABLE eurocars_demo_models (brand_slug TEXT NOT NULL, name TEXT NOT NULL, slug TEXT NOT NULL) ON COMMIT DROP;
+
+INSERT INTO eurocars_demo_models (brand_slug, name, slug) VALUES
+>>>>>>> master
     ('audi', 'A4', 'a4'), ('audi', 'Q5', 'q5'),
     ('bmw', '3 Series', '3-series'), ('bmw', 'X5', 'x5'),
     ('ford', 'Focus', 'focus'), ('ford', 'Kuga', 'kuga'),
@@ -55,9 +100,44 @@ FROM (VALUES
     ('tesla', 'Model 3', 'model-3'), ('tesla', 'Model Y', 'model-y'),
     ('toyota', 'Corolla', 'corolla'), ('toyota', 'RAV4', 'rav4'),
     ('volkswagen', 'Golf', 'golf'), ('volkswagen', 'Tiguan', 'tiguan'),
+<<<<<<< HEAD
     ('volvo', 'XC60', 'xc60'), ('volvo', 'V60', 'v60')
 ) AS m(brand_slug, name, slug)
 JOIN car_brands b ON b.slug = m.brand_slug;
+=======
+    ('volvo', 'XC60', 'xc60'), ('volvo', 'V60', 'v60');
+
+INSERT INTO car_models (brand_id, name, slug)
+SELECT b.id, m.name, m.slug
+FROM eurocars_demo_models m
+JOIN eurocars_demo_brands d ON d.slug = m.brand_slug
+JOIN car_brands b ON b.name = d.name
+WHERE NOT EXISTS (
+    SELECT 1 FROM car_models existing WHERE existing.brand_id = b.id AND existing.name = m.name
+)
+ON CONFLICT (brand_id, slug) DO NOTHING;
+
+DO $$
+BEGIN
+    IF EXISTS (
+        SELECT 1 FROM eurocars_demo_models d
+        JOIN eurocars_demo_brands db ON db.slug = d.brand_slug
+        JOIN car_brands b ON b.name = db.name
+        JOIN car_models m ON m.brand_id = b.id AND m.slug = d.slug
+        WHERE m.name <> d.name
+    ) THEN
+        RAISE EXCEPTION 'Demo seed: a model slug belongs to a different model. Resolve the conflict before retrying.';
+    END IF;
+    IF EXISTS (
+        SELECT 1 FROM eurocars_demo_models d
+        JOIN eurocars_demo_brands db ON db.slug = d.brand_slug
+        JOIN car_brands b ON b.name = db.name
+        WHERE (SELECT COUNT(*) FROM car_models m WHERE m.brand_id = b.id AND m.name = d.name) <> 1
+    ) THEN
+        RAISE EXCEPTION 'Demo seed: a model name is missing or ambiguous. Resolve the conflict before retrying.';
+    END IF;
+END $$;
+>>>>>>> master
 
 INSERT INTO car_features (name, category) VALUES
     ('Air conditioning', 'Comfort'),
@@ -67,11 +147,34 @@ INSERT INTO car_features (name, category) VALUES
     ('Parking sensors', 'Safety'),
     ('Rear view camera', 'Safety'),
     ('Cruise control', 'Driving'),
+<<<<<<< HEAD
     ('LED headlights', 'Exterior');
 
 INSERT INTO users (email, password_hash, first_name, last_name)
 SELECT 'seller' || n || '@eurocars.example.invalid', '!demo-login-disabled', 'Demo', 'Seller ' || n
 FROM generate_series(1, 8) AS n;
+=======
+    ('LED headlights', 'Exterior')
+ON CONFLICT (name) DO NOTHING;
+
+DO $$
+BEGIN
+    IF EXISTS (
+        SELECT 1 FROM users u
+        JOIN generate_series(1, 8) AS n
+            ON LOWER(u.email) = 'seller' || n || '@eurocars.example.invalid'
+        WHERE u.password_hash <> '!demo-login-disabled'
+            OR u.role <> 'USER' OR u.deleted_at IS NOT NULL OR u.account_status <> 'ACTIVE'
+    ) THEN
+        RAISE EXCEPTION 'Demo seed: a reserved demo seller email is already used by another account or a modified demo account.';
+    END IF;
+END $$;
+
+INSERT INTO users (email, password_hash, first_name, last_name)
+SELECT 'seller' || n || '@eurocars.example.invalid', '!demo-login-disabled', 'Demo', 'Seller ' || n
+FROM generate_series(1, 8) AS n
+ON CONFLICT (LOWER(email)) DO NOTHING;
+>>>>>>> master
 
 INSERT INTO cars (
     seller_id, brand_id, model_id, title, description, price, currency, year, mileage,
@@ -106,6 +209,7 @@ FROM (VALUES
     (3, 'mazda', 'cx-5', 23900, 'EUR', 2021, 44000, 'PETROL', 'AUTOMATIC', 'SUV', 1998, 165, 'DE', 'Cologne', 19),
     (4, 'honda', 'civic', 21500, 'CHF', 2020, 46000, 'PETROL', 'MANUAL', 'HATCHBACK', 1498, 182, 'CH', 'Zurich', 20)
 ) AS v(seller_number, brand_slug, model_slug, price, currency, year, mileage, fuel, transmission, body_type, engine_cc, power_hp, country, city, age_days)
+<<<<<<< HEAD
 JOIN users u ON u.email = 'seller' || v.seller_number || '@eurocars.example.invalid'
 JOIN car_brands b ON b.slug = v.brand_slug
 JOIN car_models m ON m.brand_id = b.id AND m.slug = v.model_slug;
@@ -123,5 +227,31 @@ BEGIN
         RAISE EXCEPTION 'Demo seed data is incomplete.';
     END IF;
 END $$;
+=======
+JOIN users u ON LOWER(u.email) = 'seller' || v.seller_number || '@eurocars.example.invalid'
+JOIN eurocars_demo_brands d ON d.slug = v.brand_slug
+JOIN car_brands b ON b.name = d.name
+JOIN eurocars_demo_models dm ON dm.brand_slug = v.brand_slug AND dm.slug = v.model_slug
+JOIN car_models m ON m.brand_id = b.id AND m.name = dm.name
+WHERE NOT EXISTS (
+    SELECT 1 FROM cars existing
+    WHERE existing.seller_id = u.id AND existing.model_id = m.id
+);
+
+INSERT INTO car_feature_links (car_id, feature_id)
+SELECT c.id, f.id FROM cars c
+JOIN users u ON u.id = c.seller_id
+JOIN car_brands b ON b.id = c.brand_id
+JOIN car_models m ON m.id = c.model_id AND m.brand_id = b.id
+CROSS JOIN car_features f
+WHERE f.name IN ('Air conditioning', 'Bluetooth')
+    AND u.password_hash = '!demo-login-disabled'
+    AND LOWER(u.email) IN (
+        SELECT 'seller' || n || '@eurocars.example.invalid' FROM generate_series(1, 8) AS n
+    )
+    AND c.title = 'Demo: ' || b.name || ' ' || m.name
+    AND c.description = 'Demonstration listing only. This vehicle and seller are fictional.'
+ON CONFLICT (car_id, feature_id) DO NOTHING;
+>>>>>>> master
 
 COMMIT;

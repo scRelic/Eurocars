@@ -202,21 +202,64 @@ def run():
                            cwd=ROOT, env=image_test_env, check=True, timeout=60)
 
             subprocess.run([str(PG_BIN / "createdb"), "eurocars_seed_test"], env=pg_env, check=True, capture_output=True)
+<<<<<<< HEAD
             for script in ("db.sql", "seed.sql"):
                 subprocess.run([str(PG_BIN / "psql"), "-v", "ON_ERROR_STOP=1", "-d", "eurocars_seed_test",
                                 "-f", str(ROOT / "server" / script)], env=pg_env, check=True, capture_output=True)
             seed_counts = """SELECT (SELECT COUNT(*) FROM countries), (SELECT COUNT(*) FROM car_brands),
                                     (SELECT COUNT(*) FROM car_models), (SELECT COUNT(*) FROM users),
                                     (SELECT COUNT(*) FROM cars), (SELECT COUNT(*) FROM car_images)"""
+=======
+            subprocess.run([str(PG_BIN / "psql"), "-v", "ON_ERROR_STOP=1", "-d", "eurocars_seed_test",
+                            "-f", str(ROOT / "server" / "db.sql")], env=pg_env, check=True, capture_output=True)
+            def seed_sql(query):
+                return subprocess.run([str(PG_BIN / "psql"), "-v", "ON_ERROR_STOP=1", "-d", "eurocars_seed_test",
+                                       "-tAc", query], env=pg_env, check=True, capture_output=True, text=True).stdout.strip()
+
+            seed_sql("""INSERT INTO countries(code, name, currency) VALUES ('DE', 'Existing Germany', 'EUR');
+                INSERT INTO users(email, password_hash, role) VALUES ('real@example.test', 'existing-hash', 'ADMIN');
+                INSERT INTO car_brands(name, slug) VALUES ('BMW', 'existing-bmw');
+                INSERT INTO car_models(brand_id, name, slug)
+                    SELECT id, '3 Series', 'existing-series' FROM car_brands WHERE name = 'BMW';
+                INSERT INTO car_features(name, category) VALUES ('Bluetooth', 'Existing category');
+                INSERT INTO cars(seller_id, brand_id, model_id, title, price, year, mileage, fuel_type, transmission, country_code, city)
+                    SELECT u.id, b.id, m.id, 'Real car', 100, 2020, 1000, 'PETROL', 'MANUAL', 'DE', 'Berlin'
+                    FROM users u, car_brands b, car_models m
+                    WHERE u.email = 'real@example.test' AND b.name = 'BMW' AND m.brand_id = b.id""")
+            seed_path = str(ROOT / "server" / "seed.sql")
+            subprocess.run([str(PG_BIN / "psql"), "-v", "ON_ERROR_STOP=1", "-d", "eurocars_seed_test",
+                            "-f", seed_path], env=pg_env, check=True, capture_output=True)
+            seed_counts = """SELECT (SELECT COUNT(*) FROM countries), (SELECT COUNT(*) FROM car_brands),
+                                    (SELECT COUNT(*) FROM car_models), (SELECT COUNT(*) FROM users),
+                                    (SELECT COUNT(*) FROM cars), (SELECT COUNT(*) FROM car_images),
+                                    (SELECT COUNT(*) FROM car_feature_links)"""
+>>>>>>> master
             def seeded_counts():
                 return subprocess.run([str(PG_BIN / "psql"), "-v", "ON_ERROR_STOP=1", "-d", "eurocars_seed_test",
                                        "-tAc", seed_counts], env=pg_env, check=True, capture_output=True, text=True).stdout.strip()
 
+<<<<<<< HEAD
             assert seeded_counts() == "32|18|36|8|20|0"
             second_seed = subprocess.run([str(PG_BIN / "psql"), "-v", "ON_ERROR_STOP=1", "-d", "eurocars_seed_test",
                                           "-f", str(ROOT / "server" / "seed.sql")], env=pg_env, capture_output=True)
             assert second_seed.returncode != 0 and b"Demo seed requires empty" in second_seed.stderr
             assert seeded_counts() == "32|18|36|8|20|0"
+=======
+            assert seeded_counts() == "32|18|36|9|21|0|40"
+            assert seed_sql("SELECT password_hash || '|' || role FROM users WHERE email = 'real@example.test'") == "existing-hash|ADMIN"
+            assert seed_sql("SELECT name FROM countries WHERE code = 'DE'") == "Existing Germany"
+            assert seed_sql("SELECT category FROM car_features WHERE name = 'Bluetooth'") == "Existing category"
+            assert seed_sql("SELECT COUNT(*) FROM car_feature_links l JOIN cars c ON c.id=l.car_id WHERE c.title='Real car'") == "0"
+            subprocess.run([str(PG_BIN / "psql"), "-v", "ON_ERROR_STOP=1", "-d", "eurocars_seed_test",
+                            "-f", seed_path], env=pg_env, check=True, capture_output=True)
+            assert seeded_counts() == "32|18|36|9|21|0|40"
+            seed_sql("UPDATE users SET password_hash='changed-hash' WHERE email='seller1@eurocars.example.invalid'")
+            collision = subprocess.run([str(PG_BIN / "psql"), "-v", "ON_ERROR_STOP=1", "-d", "eurocars_seed_test",
+                                        "-f", seed_path], env=pg_env, capture_output=True)
+            assert collision.returncode != 0 and b"reserved demo seller email" in collision.stderr
+            assert seed_sql("SELECT password_hash FROM users WHERE email='seller1@eurocars.example.invalid'") == "changed-hash"
+            assert seeded_counts() == "32|18|36|9|21|0|40"
+>>>>>>> master
 
             def sql(query):
                 return subprocess.run([str(PG_BIN / "psql"), "-v", "ON_ERROR_STOP=1", "-d", "eurocars_test",
